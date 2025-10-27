@@ -249,7 +249,7 @@
     let orderData = {};
     formData.forEach((value, key) => { orderData[key] = value; });
 
-    emailjs.send("IxviPCs", "__ejs-test-mail-service__", orderData)
+   emailjs.send("service_kpvu9k4", "template_tgsa473", orderData)
     .then(() => {
       alert('Order sent successfully!');
       this.reset();
