@@ -7,7 +7,7 @@
 <style>
   body {
     background-color: #000000;
-    color: #00BFFF; /* blue text */
+    color: #00BFFF;
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
@@ -28,35 +28,58 @@
     gap: 20px;
     width: 100%;
     max-width: 600px;
-    align-items: flex-start;
+    align-items: center;
   }
 
-  label {
-    font-size: 1.2rem;
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+  }
+
+  label.checkbox-label {
     display: flex;
     justify-content: space-between; /* text left, checkbox right */
-    align-items: center;
     width: 100%;
+    font-size: 1.2rem;
     color: #00BFFF;
+    align-items: center;
+  }
+
+  .part-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .part-container label {
+    align-self: flex-start;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
   }
 
   input[type="text"], input[type="email"], textarea {
     width: 100%;
+    max-width: 400px;
     padding: 10px;
     font-size: 1rem;
     border-radius: 5px;
     border: 2px solid #FF0000; /* red outline */
     background-color: #000000; /* black inside */
     color: #00BFFF; /* blue text */
-    margin-top: 5px;
   }
 
   input[type="checkbox"] {
     width: 20px;
     height: 20px;
-    accent-color: #00BFFF; /* blue check */
-    background-color: #000000; /* black inside */
-    border: 2px solid #FF0000; /* red border */
+    accent-color: #00BFFF;
+    background-color: #000000;
+    border: 2px solid #FF0000;
     cursor: pointer;
     flex-shrink: 0;
   }
@@ -66,6 +89,7 @@
     flex-direction: column;
     gap: 15px;
     width: 100%;
+    align-items: center;
   }
 
   textarea {
@@ -73,7 +97,7 @@
   }
 
   .send-button {
-    display: none; /* hidden until selection */
+    display: none;
     background-color: #FF0000;
     color: #FFFFFF;
     border: none;
@@ -89,45 +113,88 @@
     border: 2px solid #FF0000;
     transform: scale(1.05);
   }
-
-  .preset-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    max-width: 600px;
-    margin-bottom: 20px;
-  }
 </style>
 </head>
 <body>
 
 <h1>Ixvi PCs - Place Your Order</h1>
 
-<div class="preset-container" id="presetGroup">
-  <label>Basic <input type="checkbox" name="preset" value="Basic"></label>
-  <label>Pro <input type="checkbox" name="preset" value="Pro"></label>
-  <label>Ultra <input type="checkbox" name="preset" value="Ultra"></label>
-  <label>Elite <input type="checkbox" name="preset" value="Elite"></label>
-  <label>Custom <input type="checkbox" name="preset" value="Custom"></label>
+<div class="checkbox-group" id="presetGroup">
+  <label class="checkbox-label">Basic <input type="checkbox" name="preset" value="Basic"></label>
+  <label class="checkbox-label">Pro <input type="checkbox" name="preset" value="Pro"></label>
+  <label class="checkbox-label">Ultra <input type="checkbox" name="preset" value="Ultra"></label>
+  <label class="checkbox-label">Elite <input type="checkbox" name="preset" value="Elite"></label>
+  <label class="checkbox-label">Custom <input type="checkbox" name="preset" value="Custom"></label>
 </div>
 
 <div class="form-container" id="formContainer">
   <form id="orderForm">
     <div class="custom-fields" id="customFields">
-      <label>Motherboard Details: <input type="text" name="motherboard"></label>
-      <label>CPU Details: <input type="text" name="cpu"></label>
-      <label>RAM Details: <input type="text" name="ram"></label>
-      <label>Storage Details: <input type="text" name="storage"></label>
-      <label>PSU Details: <input type="text" name="psu"></label>
-      <label>Case Details: <input type="text" name="case"></label>
-      <label>Fans Details: <input type="text" name="fans"></label>
-      <label>CPU Cooler Details: <input type="text" name="cooler"></label>
-      <label>Additional Accessories: <input type="text" name="accessories"></label>
+      <!-- Repeat this block for each part -->
+      <div class="part-container">
+        <label>Motherboard</label>
+        <input type="text" name="motherboard_name" placeholder="Motherboard Name">
+        <input type="text" name="motherboard_details" placeholder="Details">
+      </div>
+
+      <div class="part-container">
+        <label>CPU</label>
+        <input type="text" name="cpu_name" placeholder="CPU Name">
+        <input type="text" name="cpu_details" placeholder="Details">
+      </div>
+
+      <div class="part-container">
+        <label>RAM</label>
+        <input type="text" name="ram_name" placeholder="RAM Name">
+        <input type="text" name="ram_details" placeholder="Details">
+      </div>
+
+      <div class="part-container">
+        <label>Storage</label>
+        <input type="text" name="storage_name" placeholder="Storage Name">
+        <input type="text" name="storage_details" placeholder="Details">
+      </div>
+
+      <div class="part-container">
+        <label>PSU</label>
+        <input type="text" name="psu_name" placeholder="PSU Name">
+        <input type="text" name="psu_details" placeholder="Details">
+      </div>
+
+      <div class="part-container">
+        <label>Case</label>
+        <input type="text" name="case_name" placeholder="Case Name">
+        <input type="text" name="case_details" placeholder="Details">
+      </div>
+
+      <div class="part-container">
+        <label>Fans</label>
+        <input type="text" name="fans_name" placeholder="Fans Name">
+        <input type="text" name="fans_details" placeholder="Details">
+      </div>
+
+      <div class="part-container">
+        <label>CPU Cooler</label>
+        <input type="text" name="cooler_name" placeholder="Cooler Name">
+        <input type="text" name="cooler_details" placeholder="Details">
+      </div>
+
+      <div class="part-container">
+        <label>Additional Accessories</label>
+        <input type="text" name="accessories_name" placeholder="Accessory Name">
+        <input type="text" name="accessories_details" placeholder="Details">
+      </div>
     </div>
 
-    <label>Special Instructions: <textarea name="instructions" rows="3"></textarea></label>
-    <label>Email: <input type="email" name="email" required></label>
+    <div class="part-container">
+      <label>Special Instructions</label>
+      <textarea name="instructions" rows="3" placeholder="Any notes or special requests"></textarea>
+    </div>
+
+    <div class="part-container">
+      <label>Email</label>
+      <input type="email" name="email" placeholder="Your email" required>
+    </div>
 
     <button type="submit" class="send-button" id="sendButton">Send Order</button>
   </form>
@@ -169,21 +236,7 @@
     let orderData = {};
     formData.forEach((value, key) => { orderData[key] = value; });
 
-    emailjs.send("IxviPCs", "__ejs-test-mail-service__", {
-      to_email: "ixvipcs@gmail.com",
-      preset: orderData.preset || "Custom",
-      motherboard: orderData.motherboard || "",
-      cpu: orderData.cpu || "",
-      ram: orderData.ram || "",
-      storage: orderData.storage || "",
-      psu: orderData.psu || "",
-      case_details: orderData.case || "",
-      fans: orderData.fans || "",
-      cooler: orderData.cooler || "",
-      accessories: orderData.accessories || "",
-      instructions: orderData.instructions || "",
-      from_email: orderData.email
-    })
+    emailjs.send("IxviPCs", "__ejs-test-mail-service__", orderData)
     .then(() => {
       alert('Order sent successfully!');
       this.reset();
