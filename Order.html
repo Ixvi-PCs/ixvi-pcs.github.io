@@ -97,7 +97,7 @@
   }
 
   .send-button {
-    display: none;
+    display: none; /* stays hidden until selection */
     background-color: #FF0000;
     color: #FFFFFF;
     border: none;
@@ -106,7 +106,9 @@
     cursor: pointer;
     border-radius: 8px;
     transition: background-color 0.3s ease, transform 0.2s ease;
-  }
+    display: block;      /* make it block */
+    margin: 20px auto;   /* center horizontally */
+}
 
   .send-button:hover {
     background-color: #000000;
