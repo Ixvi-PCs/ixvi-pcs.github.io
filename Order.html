@@ -7,7 +7,7 @@
   <style>
     body {
       background-color: #000000;
-      color: #00BFFF;
+      color: #00BFFF; /* blue text everywhere */
       font-family: Arial, sans-serif;
       display: flex;
       flex-direction: column;
@@ -24,8 +24,12 @@
       margin-bottom: 20px;
     }
 
-    form, .checkbox-group, #sendButton, .custom-fields {
-      display: none; /* start everything hidden */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 600px;
     }
 
     label {
@@ -41,9 +45,9 @@
       padding: 10px;
       font-size: 1rem;
       border-radius: 5px;
-      border: 2px solid #FF0000;
-      background-color: #000000;
-      color: #00BFFF;
+      border: 2px solid #FF0000; /* red outline */
+      background-color: #000000; /* black inside */
+      color: #00BFFF; /* blue text */
       margin-top: 5px;
     }
 
@@ -51,20 +55,20 @@
       margin-right: 10px;
       width: 20px;
       height: 20px;
-      accent-color: #00BFFF;
-      background-color: #000000;
-      border: 2px solid #FF0000;
+      accent-color: #00BFFF; /* blue check */
+      background-color: #000000; /* black inside */
+      border: 2px solid #FF0000; /* red border */
       cursor: pointer;
     }
 
     .checkbox-group {
+      display: none; /* start hidden */
       flex-direction: column;
       align-items: flex-start;
-      gap: 10px;
-      margin-bottom: 20px;
     }
 
-    .send-button, #startOrder {
+    .send-button {
+      display: none; /* start hidden */
       background-color: #FF0000;
       color: #FFFFFF;
       border: none;
@@ -75,13 +79,14 @@
       transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
-    .send-button:hover, #startOrder:hover {
+    .send-button:hover {
       background-color: #000000;
       border: 2px solid #FF0000;
       transform: scale(1.05);
     }
 
     .custom-fields {
+      display: none;
       flex-direction: column;
       gap: 15px;
     }
@@ -93,8 +98,6 @@
 </head>
 <body>
   <h1>Ixvi PCs - Place Your Order</h1>
-
-  <button id="startOrder">Start Order</button>
 
   <!-- Preset/Custom choices -->
   <div class="checkbox-group" id="presetGroup">
@@ -126,24 +129,18 @@
 
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    emailjs.init("YXXP3E0HTO4X2bbKs");
+    emailjs.init("YXXP3E0HTO4X2bbKs"); // Public Key
 
-    const startButton = document.getElementById('startOrder');
     const presetGroup = document.getElementById('presetGroup');
+    presetGroup.style.display = 'flex'; // show checkboxes after page load
+
     const presetCheckboxes = document.querySelectorAll('input[name="preset"]');
     const customFields = document.getElementById('customFields');
     const sendButton = document.getElementById('sendButton');
-    const orderForm = document.getElementById('orderForm');
-
-    startButton.addEventListener('click', () => {
-      startButton.style.display = 'none';
-      presetGroup.style.display = 'flex';
-      orderForm.style.display = 'flex';
-    });
 
     presetCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
-        sendButton.style.display = 'block';
+        sendButton.style.display = 'block'; // show send button once something is selected
 
         if (checkbox.value === 'Custom') {
           if (checkbox.checked) {
@@ -160,7 +157,7 @@
       });
     });
 
-    orderForm.addEventListener('submit', function(e) {
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const formData = new FormData(this);
       let orderData = {};
@@ -187,7 +184,6 @@
         customFields.style.display = 'none';
         sendButton.style.display = 'none';
         presetCheckboxes.forEach(cb => cb.checked = false);
-        startButton.style.display = 'block'; // reset to start
       }, (error) => {
         console.error('FAILED...', error);
         alert('Failed to send order. Try again.');
