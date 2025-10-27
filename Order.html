@@ -213,24 +213,24 @@
   const sendButton = document.getElementById('sendButton');
 
   presetCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-      formContainer.style.display = 'flex';
-      sendButton.style.display = 'block';
+  checkbox.addEventListener('change', () => {
+    // If any checkbox is checked, show form, else hide form
+    const anyChecked = Array.from(presetCheckboxes).some(cb => cb.checked);
+    formContainer.style.display = anyChecked ? 'flex' : 'none';
+    sendButton.style.display = anyChecked ? 'block' : 'none';
 
-      if (checkbox.value === 'Custom') {
-        if (checkbox.checked) {
-          customFields.style.display = 'flex';
-          presetCheckboxes.forEach(cb => { if(cb.value !== 'Custom') cb.checked = false; });
-        } else {
-          customFields.style.display = 'none';
-        }
-      } else {
-        customFields.style.display = 'none';
-        presetCheckboxes.forEach(cb => { if(cb.value === 'Custom') cb.checked = false; });
-        presetCheckboxes.forEach(cb => { if(cb !== checkbox) cb.checked = false; });
-      }
-    });
+    // Show custom fields only if Custom is checked
+    const customCheckbox = document.querySelector('input[name="preset"][value="Custom"]');
+    customFields.style.display = customCheckbox.checked ? 'flex' : 'none';
+
+    // Uncheck other checkboxes if not Custom
+    if (checkbox.value !== 'Custom' && checkbox.checked) {
+      presetCheckboxes.forEach(cb => {
+        if (cb !== checkbox) cb.checked = false;
+      });
+    }
   });
+});
 
   orderForm.addEventListener('submit', function(e) {
     e.preventDefault();
