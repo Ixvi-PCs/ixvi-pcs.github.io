@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ixvi PCs - Order Form</title>
+  <style>
+    body {
+      background-color: #000000;
+      color: #00BFFF;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+    label {
+      font-size: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    input[type="text"], input[type="email"], textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      margin-top: 5px;
+    }
+    input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+    }
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .send-button {
+      background-color: #FF0000;
+      color: #FFFFFF;
+      border: none;
+      padding: 12px 30px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .send-button:hover {
+      background-color: #000000;
+      border: 2px solid #FF0000;
+      transform: scale(1.05);
+    }
+    .custom-fields {
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+    }
+    textarea {
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ixvi PCs - Place Your Order</h1>
+  <form id="orderForm">
+    <div class="checkbox-group">
+      <label><input type="checkbox" name="preset" value="Basic"> Basic</label>
+      <label><input type="checkbox" name="preset" value="Pro"> Pro</label>
+      <label><input type="checkbox" name="preset" value="Ultra"> Ultra</label>
+      <label><input type="checkbox" name="preset" value="Elite"> Elite</label>
+      <label><input type="checkbox" name="preset" value="Custom"> Custom</label>
+    </div>
+
+    <div class="custom-fields" id="customFields">
+      <label>Motherboard Details: <input type="text" name="motherboard"></label>
+      <label>CPU Details: <input type="text" name="cpu"></label>
+      <label>RAM Details: <input type="text" name="ram"></label>
+      <label>Storage Details: <input type="text" name="storage"></label>
+      <label>PSU Details: <input type="text" name="psu"></label>
+      <label>Case Details: <input type="text" name="case"></label>
+      <label>Fans Details: <input type="text" name="fans"></label>
+      <label>CPU Cooler Details: <input type="text" name="cooler"></label>
+      <label>Additional Accessories: <input type="text" name="accessories"></label>
+    </div>
+
+    <label>Special Instructions: <textarea name="instructions" rows="3"></textarea></label>
+    <label>Email: <input type="email" name="email" required></label>
+
+    <button type="submit" class="send-button">Send Order</button>
+  </form>
+
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    emailjs.init("YXXP3E0HTO4X2bbKs"); // Your EmailJS public key
+
+    const presetCheckboxes = document.querySelectorAll('input[name="preset"]');
+    const customFields = document.getElementById('customFields');
+
+    presetCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        if (checkbox.value === 'Custom') {
+          if (checkbox.checked) {
+            customFields.style.display = 'flex';
+            presetCheckboxes.forEach(cb => { if(cb.value !== 'Custom') cb.checked = false; });
+          } else {
+            customFields.style.display = 'none';
+          }
+        } else {
+          customFields.style.display = 'none';
+          presetCheckboxes.forEach(cb => { if(cb.value === 'Custom') cb.checked = false; });
+          presetCheckboxes.forEach(cb => { if(cb !== checkbox) cb.checked = false; });
+        }
+      });
+    });
+
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      let orderData = {};
+      formData.forEach((value, key) => { orderData[key] = value; });
+
+      emailjs.send("IxviPCs", "__ejs-test-mail-service__", {
+        to_email: "ixvipcs@gmail.com",
+        preset: orderData.preset || "Custom",
+        motherboard: orderData.motherboard || "",
+        cpu: orderData.cpu || "",
+        ram: orderData.ram || "",
+        storage: orderData.storage || "",
+        psu: orderData.psu || "",
+        case_details: orderData.case || "",
+        fans: orderData.fans || "",
+        cooler: orderData.cooler || "",
+        accessories: orderData.accessories || "",
+        instructions: orderData.instructions || "",
+        from_email: orderData.email
+      })
+      .then(() => {
+        alert('Order sent successfully!');
+        this.reset();
+        customFields.style.display = 'none';
+      }, (error) => {
+        console.error('FAILED...', error);
+        alert('Failed to send order. Try again.');
+      });
+    });
+  </script>
+</body>
+</html>
