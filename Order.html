@@ -18,41 +18,53 @@
       padding: 40px 20px;
       text-align: center;
     }
+
     h1 {
       font-size: 3rem;
       margin-bottom: 20px;
     }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      width: 100%;
-      max-width: 600px;
+
+    form, .checkbox-group, #sendButton, .custom-fields {
+      display: none; /* start everything hidden */
     }
+
     label {
       font-size: 1.2rem;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      color: #00BFFF;
     }
+
     input[type="text"], input[type="email"], textarea {
       width: 100%;
       padding: 10px;
       font-size: 1rem;
       border-radius: 5px;
-      border: none;
+      border: 2px solid #FF0000;
+      background-color: #000000;
+      color: #00BFFF;
       margin-top: 5px;
     }
+
     input[type="checkbox"] {
       margin-right: 10px;
-      transform: scale(1.2);
+      width: 20px;
+      height: 20px;
+      accent-color: #00BFFF;
+      background-color: #000000;
+      border: 2px solid #FF0000;
+      cursor: pointer;
     }
+
     .checkbox-group {
-      display: flex;
       flex-direction: column;
       align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 20px;
     }
-    .send-button {
+
+    .send-button, #startOrder {
       background-color: #FF0000;
       color: #FFFFFF;
       border: none;
@@ -62,16 +74,18 @@
       border-radius: 8px;
       transition: background-color 0.3s ease, transform 0.2s ease;
     }
-    .send-button:hover {
+
+    .send-button:hover, #startOrder:hover {
       background-color: #000000;
       border: 2px solid #FF0000;
       transform: scale(1.05);
     }
+
     .custom-fields {
-      display: none;
       flex-direction: column;
       gap: 15px;
     }
+
     textarea {
       resize: vertical;
     }
@@ -79,15 +93,19 @@
 </head>
 <body>
   <h1>Ixvi PCs - Place Your Order</h1>
-  <form id="orderForm">
-    <div class="checkbox-group">
-      <label><input type="checkbox" name="preset" value="Basic"> Basic</label>
-      <label><input type="checkbox" name="preset" value="Pro"> Pro</label>
-      <label><input type="checkbox" name="preset" value="Ultra"> Ultra</label>
-      <label><input type="checkbox" name="preset" value="Elite"> Elite</label>
-      <label><input type="checkbox" name="preset" value="Custom"> Custom</label>
-    </div>
 
+  <button id="startOrder">Start Order</button>
+
+  <!-- Preset/Custom choices -->
+  <div class="checkbox-group" id="presetGroup">
+    <label><input type="checkbox" name="preset" value="Basic"> Basic</label>
+    <label><input type="checkbox" name="preset" value="Pro"> Pro</label>
+    <label><input type="checkbox" name="preset" value="Ultra"> Ultra</label>
+    <label><input type="checkbox" name="preset" value="Elite"> Elite</label>
+    <label><input type="checkbox" name="preset" value="Custom"> Custom</label>
+  </div>
+
+  <form id="orderForm">
     <div class="custom-fields" id="customFields">
       <label>Motherboard Details: <input type="text" name="motherboard"></label>
       <label>CPU Details: <input type="text" name="cpu"></label>
@@ -103,18 +121,30 @@
     <label>Special Instructions: <textarea name="instructions" rows="3"></textarea></label>
     <label>Email: <input type="email" name="email" required></label>
 
-    <button type="submit" class="send-button">Send Order</button>
+    <button type="submit" class="send-button" id="sendButton">Send Order</button>
   </form>
 
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    emailjs.init("YXXP3E0HTO4X2bbKs"); // Your EmailJS public key
+    emailjs.init("YXXP3E0HTO4X2bbKs");
 
+    const startButton = document.getElementById('startOrder');
+    const presetGroup = document.getElementById('presetGroup');
     const presetCheckboxes = document.querySelectorAll('input[name="preset"]');
     const customFields = document.getElementById('customFields');
+    const sendButton = document.getElementById('sendButton');
+    const orderForm = document.getElementById('orderForm');
+
+    startButton.addEventListener('click', () => {
+      startButton.style.display = 'none';
+      presetGroup.style.display = 'flex';
+      orderForm.style.display = 'flex';
+    });
 
     presetCheckboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
+        sendButton.style.display = 'block';
+
         if (checkbox.value === 'Custom') {
           if (checkbox.checked) {
             customFields.style.display = 'flex';
@@ -130,7 +160,7 @@
       });
     });
 
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
+    orderForm.addEventListener('submit', function(e) {
       e.preventDefault();
       const formData = new FormData(this);
       let orderData = {};
@@ -155,6 +185,9 @@
         alert('Order sent successfully!');
         this.reset();
         customFields.style.display = 'none';
+        sendButton.style.display = 'none';
+        presetCheckboxes.forEach(cb => cb.checked = false);
+        startButton.style.display = 'block'; // reset to start
       }, (error) => {
         console.error('FAILED...', error);
         alert('Failed to send order. Try again.');
