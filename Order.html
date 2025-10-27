@@ -243,32 +243,37 @@
 
   // Form submission
   orderForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
-    let orderData = {};
-    formData.forEach((value, key) => { orderData[key] = value; });
+  e.preventDefault();
+  const formData = new FormData(this);
+  let orderData = {};
+  formData.forEach((value, key) => { orderData[key] = value; });
 
-    // First, send admin email
-    emailjs.send("service_kpvu9k4", "template_adminOrder", orderData)
-      .then(() => {
-        console.log('Admin order sent successfully!');
+  // Send admin copy to you
+  emailjs.send("service_kpvu9k4", "template_adminOrder", orderData)
+    .then(() => {
+      console.log('Admin order sent successfully!');
 
-        // Then send customer confirmation
-        return emailjs.send("service_kpvu9k4", "template_tgsa473", orderData);
-      })
-      .then(() => {
-        alert('Order sent successfully!');
-        this.reset();
-        customFields.style.display = 'none';
-        sendButton.style.display = 'none';
-        formContainer.style.display = 'none';
-        presetCheckboxes.forEach(cb => cb.checked = false);
-      })
-      .catch((error) => {
-        console.error('FAILED to send order...', error);
-        alert('Failed to send order. Try again.');
-      });
-  });
+      // Send customer copy to the email they entered
+      const customerData = {
+        ...orderData,
+        to_email: orderData.email // ensure template uses {{to_email}}
+      };
+
+      return emailjs.send("service_kpvu9k4", "template_tgsa473", customerData);
+    })
+    .then(() => {
+      alert('Order sent successfully!');
+      this.reset();
+      customFields.style.display = 'none';
+      sendButton.style.display = 'none';
+      formContainer.style.display = 'none';
+      presetCheckboxes.forEach(cb => cb.checked = false);
+    })
+    .catch((error) => {
+      console.error('FAILED to send order...', error);
+      alert('Failed to send order. Try again.');
+    });
+});
 </script>
 </body>
 </html>
