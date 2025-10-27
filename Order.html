@@ -223,44 +223,51 @@
   const orderForm = document.getElementById('orderForm');
   const sendButton = document.getElementById('sendButton');
 
+  // Show form based on preset selection
   presetCheckboxes.forEach(checkbox => {
-  checkbox.addEventListener('change', () => {
-    // If any checkbox is checked, show form, else hide form
-    const anyChecked = Array.from(presetCheckboxes).some(cb => cb.checked);
-    formContainer.style.display = anyChecked ? 'flex' : 'none';
-    sendButton.style.display = anyChecked ? 'block' : 'none';
+    checkbox.addEventListener('change', () => {
+      const anyChecked = Array.from(presetCheckboxes).some(cb => cb.checked);
+      formContainer.style.display = anyChecked ? 'flex' : 'none';
+      sendButton.style.display = anyChecked ? 'block' : 'none';
 
-    // Show custom fields only if Custom is checked
-    const customCheckbox = document.querySelector('input[name="preset"][value="Custom"]');
-    customFields.style.display = customCheckbox.checked ? 'flex' : 'none';
+      const customCheckbox = document.querySelector('input[name="preset"][value="Custom"]');
+      customFields.style.display = customCheckbox.checked ? 'flex' : 'none';
 
-    // Uncheck other checkboxes if not Custom
-    if (checkbox.value !== 'Custom' && checkbox.checked) {
-      presetCheckboxes.forEach(cb => {
-        if (cb !== checkbox) cb.checked = false;
-      });
-    }
+      if (checkbox.value !== 'Custom' && checkbox.checked) {
+        presetCheckboxes.forEach(cb => {
+          if (cb !== checkbox) cb.checked = false;
+        });
+      }
+    });
   });
-});
 
+  // Form submission
   orderForm.addEventListener('submit', function(e) {
     e.preventDefault();
     const formData = new FormData(this);
     let orderData = {};
     formData.forEach((value, key) => { orderData[key] = value; });
 
-   emailjs.send("service_kpvu9k4", "template_tgsa473", orderData)
-    .then(() => {
-      alert('Order sent successfully!');
-      this.reset();
-      customFields.style.display = 'none';
-      sendButton.style.display = 'none';
-      formContainer.style.display = 'none';
-      presetCheckboxes.forEach(cb => cb.checked = false);
-    }, (error) => {
-      console.error('FAILED...', error);
-      alert('Failed to send order. Try again.');
-    });
+    // First, send admin email
+    emailjs.send("service_kpvu9k4", "template_adminOrder", orderData)
+      .then(() => {
+        console.log('Admin order sent successfully!');
+
+        // Then send customer confirmation
+        return emailjs.send("service_kpvu9k4", "template_tgsa473", orderData);
+      })
+      .then(() => {
+        alert('Order sent successfully!');
+        this.reset();
+        customFields.style.display = 'none';
+        sendButton.style.display = 'none';
+        formContainer.style.display = 'none';
+        presetCheckboxes.forEach(cb => cb.checked = false);
+      })
+      .catch((error) => {
+        console.error('FAILED to send order...', error);
+        alert('Failed to send order. Try again.');
+      });
   });
 </script>
 
