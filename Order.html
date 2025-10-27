@@ -22,8 +22,8 @@
     margin-bottom: 20px;
   }
 
-  form, .checkbox-group {
-    display: none; /* start hidden */
+  .form-container {
+    display: none; /* hidden until a preset/custom is picked */
     flex-direction: column;
     gap: 20px;
     width: 100%;
@@ -34,7 +34,8 @@
   label {
     font-size: 1.2rem;
     display: flex;
-    justify-content: space-between; /* align checkbox to the right */
+    justify-content: space-between; /* text left, checkbox right */
+    align-items: center;
     width: 100%;
     color: #00BFFF;
   }
@@ -57,6 +58,7 @@
     background-color: #000000; /* black inside */
     border: 2px solid #FF0000; /* red border */
     cursor: pointer;
+    flex-shrink: 0;
   }
 
   .custom-fields {
@@ -87,16 +89,22 @@
     border: 2px solid #FF0000;
     transform: scale(1.05);
   }
+
+  .preset-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+  }
 </style>
 </head>
 <body>
 
 <h1>Ixvi PCs - Place Your Order</h1>
 
-<!-- Button to show options -->
-<button id="startOrder" class="send-button" style="display:block;">Start Order</button>
-
-<div class="checkbox-group" id="presetGroup">
+<div class="preset-container" id="presetGroup">
   <label>Basic <input type="checkbox" name="preset" value="Basic"></label>
   <label>Pro <input type="checkbox" name="preset" value="Pro"></label>
   <label>Ultra <input type="checkbox" name="preset" value="Ultra"></label>
@@ -104,45 +112,42 @@
   <label>Custom <input type="checkbox" name="preset" value="Custom"></label>
 </div>
 
-<form id="orderForm">
-  <div class="custom-fields" id="customFields">
-    <label>Motherboard Details: <input type="text" name="motherboard"></label>
-    <label>CPU Details: <input type="text" name="cpu"></label>
-    <label>RAM Details: <input type="text" name="ram"></label>
-    <label>Storage Details: <input type="text" name="storage"></label>
-    <label>PSU Details: <input type="text" name="psu"></label>
-    <label>Case Details: <input type="text" name="case"></label>
-    <label>Fans Details: <input type="text" name="fans"></label>
-    <label>CPU Cooler Details: <input type="text" name="cooler"></label>
-    <label>Additional Accessories: <input type="text" name="accessories"></label>
-  </div>
+<div class="form-container" id="formContainer">
+  <form id="orderForm">
+    <div class="custom-fields" id="customFields">
+      <label>Motherboard Details: <input type="text" name="motherboard"></label>
+      <label>CPU Details: <input type="text" name="cpu"></label>
+      <label>RAM Details: <input type="text" name="ram"></label>
+      <label>Storage Details: <input type="text" name="storage"></label>
+      <label>PSU Details: <input type="text" name="psu"></label>
+      <label>Case Details: <input type="text" name="case"></label>
+      <label>Fans Details: <input type="text" name="fans"></label>
+      <label>CPU Cooler Details: <input type="text" name="cooler"></label>
+      <label>Additional Accessories: <input type="text" name="accessories"></label>
+    </div>
 
-  <label>Special Instructions: <textarea name="instructions" rows="3"></textarea></label>
-  <label>Email: <input type="email" name="email" required></label>
+    <label>Special Instructions: <textarea name="instructions" rows="3"></textarea></label>
+    <label>Email: <input type="email" name="email" required></label>
 
-  <button type="submit" class="send-button" id="sendButton">Send Order</button>
-</form>
+    <button type="submit" class="send-button" id="sendButton">Send Order</button>
+  </form>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
   emailjs.init("YXXP3E0HTO4X2bbKs");
 
-  const startOrder = document.getElementById('startOrder');
-  const presetGroup = document.getElementById('presetGroup');
   const presetCheckboxes = document.querySelectorAll('input[name="preset"]');
+  const formContainer = document.getElementById('formContainer');
   const customFields = document.getElementById('customFields');
   const orderForm = document.getElementById('orderForm');
   const sendButton = document.getElementById('sendButton');
 
-  startOrder.addEventListener('click', () => {
-    startOrder.style.display = 'none';
-    presetGroup.style.display = 'flex';
-    orderForm.style.display = 'flex';
-  });
-
   presetCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
+      formContainer.style.display = 'flex';
       sendButton.style.display = 'block';
+
       if (checkbox.value === 'Custom') {
         if (checkbox.checked) {
           customFields.style.display = 'flex';
@@ -184,8 +189,8 @@
       this.reset();
       customFields.style.display = 'none';
       sendButton.style.display = 'none';
+      formContainer.style.display = 'none';
       presetCheckboxes.forEach(cb => cb.checked = false);
-      startOrder.style.display = 'block';
     }, (error) => {
       console.error('FAILED...', error);
       alert('Failed to send order. Try again.');
