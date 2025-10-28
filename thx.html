@@ -23,12 +23,35 @@
     font-size: 3rem;
     margin-bottom: 20px;
     color: #FF0000;
-    text-shadow: 2px 2px #00BFFF;
+    text-shadow: 
+      0 0 5px #FF0000, 
+      0 0 10px #FF0000, 
+      0 0 20px #00BFFF, 
+      0 0 30px #00BFFF;
+    animation: glow 1.5s infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      text-shadow: 
+        0 0 5px #FF0000, 
+        0 0 10px #FF0000, 
+        0 0 20px #00BFFF, 
+        0 0 30px #00BFFF;
+    }
+    to {
+      text-shadow: 
+        0 0 10px #FF0000, 
+        0 0 20px #FF0000, 
+        0 0 30px #00BFFF, 
+        0 0 40px #00BFFF;
+    }
   }
 
   p {
     font-size: 1.2rem;
     margin-bottom: 40px;
+    color: #00BFFF;
   }
 
   .back-button {
