@@ -248,8 +248,6 @@ presetCheckboxes.forEach(checkbox => {
 orderForm.addEventListener('submit', function(e) {
   e.preventDefault();
 
-  sendButton.style.display = 'none';
-
   const formData = new FormData(this);
   let orderData = {};
   formData.forEach((value, key) => { orderData[key] = value; });
