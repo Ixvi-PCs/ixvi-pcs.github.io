@@ -252,6 +252,10 @@ orderForm.addEventListener('submit', function(e) {
   let orderData = {};
   formData.forEach((value, key) => { orderData[key] = value; });
 
+// Capture preset selection explicitly
+const presetCheckbox = document.querySelector('input[name="preset"]:checked');
+orderData.preset = presetCheckbox ? presetCheckbox.value : "None";
+  
   // Send admin copy
   emailjs.send("service_kpvu9k4", "template_adminOrder", orderData)
     .then(() => {
