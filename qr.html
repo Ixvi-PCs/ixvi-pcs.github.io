@@ -105,9 +105,6 @@
                 let blur = minBlur + t * (maxBlur - minBlur);
                 glow.style.filter = `blur(${blur}px)`;
 
-                gainNode.gain.setValueAtTime(0.001 + t * 0.03, audioCtx.currentTime);
-                oscillator.frequency.setValueAtTime(220 + t * 30, audioCtx.currentTime);
-
                 if (!shaking && t > 0.85) {
                     qr.classList.add('shake');
                     shaking = true;
@@ -120,7 +117,6 @@
                 flash.style.opacity = 1;
                 setTimeout(() => {
                     flash.style.opacity = 0;
-                    oscillator.stop();
                     window.location.href = 'https://ixvi-pcs.github.io';
                 }, 800);
             }
