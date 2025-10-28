@@ -242,38 +242,39 @@
   });
 
   // Form submission
-  orderForm.addEventListener('submit', function(e) {
+orderForm.addEventListener('submit', function(e) {
   e.preventDefault();
+
   const formData = new FormData(this);
   let orderData = {};
   formData.forEach((value, key) => { orderData[key] = value; });
 
-  // Send admin copy to you
- // Send admin copy
-emailjs.send("service_kpvu9k4", "template_adminOrder", orderData)
-  .then(() => {
-    console.log('Admin order sent successfully!');
+  // Send admin copy
+  emailjs.send("service_kpvu9k4", "template_adminOrder", orderData)
+    .then(() => {
+      console.log('Admin order sent successfully!');
 
-    // Send customer copy
-    const customerData = {
-      ...orderData,
-      to_email: orderData.email // <-- this must match your template variable
-    };
+      // Send customer copy
+      const customerData = {
+        ...orderData,
+        to_email: orderData.email
+      };
 
-    return emailjs.send("service_kpvu9k4", "template_tgsa473", customerData);
-  })
-  .then(() => {
-    alert('Order sent successfully!');
-    orderForm.reset();
-    customFields.style.display = 'none';
-    sendButton.style.display = 'none';
-    formContainer.style.display = 'none';
-    presetCheckboxes.forEach(cb => cb.checked = false);
-  })
-  .catch((error) => {
-    console.error('FAILED to send order...', error);
-    alert('Failed to send order. Try again.');
-  });
+      return emailjs.send("service_kpvu9k4", "template_tgsa473", customerData);
+    })
+    .then(() => {
+      alert('Order sent successfully!');
+      orderForm.reset();
+      customFields.style.display = 'none';
+      sendButton.style.display = 'none';
+      formContainer.style.display = 'none';
+      presetCheckboxes.forEach(cb => cb.checked = false);
+    })
+    .catch((error) => {
+      console.error('FAILED to send order...', error);
+      alert('Failed to send order. Try again.');
+    });
+});
 </script>
 </body>
 </html>
