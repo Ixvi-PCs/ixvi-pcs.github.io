@@ -28,7 +28,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 400px;
+            width: 0px;
             height: 400px;
             border-radius: 50%;
             filter: blur(40px);
@@ -81,17 +81,6 @@
         const glow = document.getElementById('glow');
         const flash = document.getElementById('flash');
         const qr = document.getElementById('qr');
-
-        // Audio context
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(220, audioCtx.currentTime);
-        gainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
-        oscillator.start();
 
         const duration = 5000;
         let startTime = null;
