@@ -248,42 +248,30 @@ presetCheckboxes.forEach(checkbox => {
 orderForm.addEventListener('submit', function(e) {
   e.preventDefault();
 
+  // Disable the button immediately to prevent double clicks
+  sendButton.disabled = true;
+  sendButton.innerText = "Sending...";
+
   const formData = new FormData(this);
   let orderData = {};
   formData.forEach((value, key) => { orderData[key] = value; });
 
-// Capture preset selection explicitly
-const presetCheckbox = document.querySelector('input[name="preset"]:checked');
-orderData.preset = presetCheckbox ? presetCheckbox.value : "None";
-  
-  // Send admin copy
+  // Capture preset selection explicitly
+  const presetCheckbox = document.querySelector('input[name="preset"]:checked');
+  orderData.preset = presetCheckbox ? presetCheckbox.value : "None";
+
+  // Fire emails in the background (async)
   emailjs.send("service_kpvu9k4", "template_adminOrder", orderData)
-    .then(() => {
-      console.log('Admin order sent successfully!');
+    .then(() => console.log('Admin email sent'))
+    .catch(err => console.error('Admin email failed', err));
 
-      // Send customer copy
-      const customerData = {
-        ...orderData,
-        to_email: orderData.email
-      };
+  const customerData = { ...orderData, to_email: orderData.email };
+  emailjs.send("service_kpvu9k4", "template_tgsa473", customerData)
+    .then(() => console.log('Customer email sent'))
+    .catch(err => console.error('Customer email failed', err));
 
-      return emailjs.send("service_kpvu9k4", "template_tgsa473", customerData);
-    })
-    .then(() => {
-      // Redirect to thank-you page
-      window.location.href = 'thx.html';
-
-      // Reset form and hide fields
-      orderForm.reset();
-      customFields.style.display = 'none';
-      sendButton.style.display = 'none';
-      formContainer.style.display = 'none';
-      presetCheckboxes.forEach(cb => cb.checked = false);
-    })
-    .catch((error) => {
-      console.error('FAILED to send order...', error);
-      alert('Failed to send order. Try again.');
-    });
+  // Instant redirect
+  window.location.href = 'thx.html';
 });
 </script>
 </body>
