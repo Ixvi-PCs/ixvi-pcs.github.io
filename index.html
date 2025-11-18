@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>We've Moved - Ixvi PCs</title>
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<style>
+  body {
+    background-color: #000000;
+    color: #00BFFF;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #FF0000;
+    text-shadow: 
+      0 0 5px #FF0000, 
+      0 0 10px #FF0000, 
+      0 0 20px #00BFFF, 
+      0 0 30px #00BFFF;
+    animation: glow 1.5s infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      text-shadow: 
+        0 0 5px #FF0000, 
+        0 0 10px #FF0000, 
+        0 0 20px #00BFFF, 
+        0 0 30px #00BFFF;
+    }
+    to {
+      text-shadow: 
+        0 0 10px #FF0000, 
+        0 0 20px #FF0000, 
+        0 0 30px #00BFFF, 
+        0 0 40px #00BFFF;
+    }
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: #00BFFF;
+  }
+</style>
+
+<script>
+  let timeLeft = 5;
+  function updateCountdown() {
+    document.getElementById("count").textContent = timeLeft;
+    if (timeLeft <= 0) {
+      window.location.href = "https://ixvipcs.com";
+    }
+    timeLeft--;
+  }
+  setInterval(updateCountdown, 1000);
+</script>
+
+</head>
+<body>
+
+<h1>We've Moved to ixvipcs.com</h1>
+<p>You will be redirected in <span id="count">5</span>…</p>
+
+</body>
+</html>
